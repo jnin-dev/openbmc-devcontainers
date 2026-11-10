@@ -1,0 +1,4 @@
+# The build context is the whole .devcontainer folder, which may contain
+# large data. Only the Dockerfile is needed to build the image.
+*
+!Dockerfile
