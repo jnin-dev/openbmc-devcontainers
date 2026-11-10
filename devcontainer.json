@@ -1,0 +1,21 @@
+{
+  "name": "OpenBMC Build - Ubuntu 24.04",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": "..",
+    "options": ["--network=host"],
+    "args": {
+      "UBUNTU_VERSION": "24.04",
+      "USERNAME": "dev",
+      "USER_UID": "1000",
+      "USER_GID": "1000"
+    }
+  },
+  "remoteUser": "dev",
+  "updateRemoteUserUID": true,
+  "runArgs": [
+    "--cap-add=sys_admin",
+    "--cap-add=sys_nice",
+    "--network=host"
+  ]
+}
