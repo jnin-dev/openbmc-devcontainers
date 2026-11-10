@@ -6,11 +6,14 @@
     "options": ["--network=host"],
     "args": {
       "UBUNTU_VERSION": "24.04",
-      "USERNAME": "dev",
       "USER_UID": "1000",
       "USER_GID": "1000"
     }
   },
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/tmp/.host-ssh,type=bind,readonly"
+  ],
+  "postStartCommand": "mkdir -p ~/.ssh && cp -r /tmp/.host-ssh/* ~/.ssh/ 2>/dev/null || true; chmod 700 ~/.ssh 2>/dev/null || true; chmod 600 ~/.ssh/id_* ~/.ssh/*_rsa ~/.ssh/*_ed25519 2>/dev/null || true; chmod 644 ~/.ssh/*.pub ~/.ssh/known_hosts ~/.ssh/config 2>/dev/null || true",
   "remoteUser": "dev",
   "updateRemoteUserUID": true,
   "runArgs": [

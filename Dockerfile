@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -yy \
     git \
     git-lfs \
     iputils-ping \
+    openssh-client \
+    sudo \
     libaudit-dev \
     libdata-dumper-simple-perl \
     lz4 \
@@ -41,6 +43,7 @@ RUN apt-get update && apt-get install -yy \
     python3-dev \
     python3-setuptools \
     python3-inflection \
+    python3-jsonschema \
     python3-yaml \
     python3-mako \
     socat \
@@ -50,15 +53,6 @@ RUN apt-get update && apt-get install -yy \
     wget \
     zstd \
     && rm -rf /var/lib/apt/lists/*
-
-RUN if dpkg --compare-versions "$UBUNTU_VERSION" ge "24.04"; then \
-    apt-get update && apt-get install -yy \
-    libsystemd-dev; \
-    else \
-        apt-get update && apt-get install -yy \
-        libtinyxml2-dev \
-        libssl-dev; \
-fi
 
 RUN git lfs install --system
 
@@ -72,6 +66,7 @@ ENV LC_ALL=en_US.UTF-8
 # development user can take UID 1000 (as the build script does).
 RUN if id ubuntu > /dev/null 2>&1; then userdel -r ubuntu > /dev/null 2>&1; fi
 RUN getent group ${USER_GID} > /dev/null || groupadd -g ${USER_GID} ${USERNAME}
-RUN getent passwd ${USER_UID} > /dev/null || useradd -m -u ${USER_UID} -g ${USER_GID} ${USERNAME}
+RUN getent passwd ${USER_UID} > /dev/null || useradd -m -u ${USER_UID} -g ${USER_GID} -s /bin/bash ${USERNAME}
+RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} && chmod 0440 /etc/sudoers.d/${USERNAME}
 
-USER ${USERNAME}
+# USER ${USERNAME}
